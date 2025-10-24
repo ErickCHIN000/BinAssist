@@ -12,6 +12,21 @@ try:
 except ImportError:
     AnthropicProvider = None
 
+try:
+    from .openai_provider import OpenAIProvider
+except ImportError:
+    OpenAIProvider = None
+
+try:
+    from .ollama_provider import OllamaProvider
+except ImportError:
+    OllamaProvider = None
+
+try:
+    from .lmstudio_provider import LMStudioProvider
+except ImportError:
+    LMStudioProvider = None
+
 __all__ = [
     'BaseLLMProvider', 'LLMProviderError', 'APIProviderError',
     'AuthenticationError', 'RateLimitError', 'NetworkError',
@@ -21,3 +36,9 @@ __all__ = [
 # Add available providers to __all__
 if AnthropicProvider:
     __all__.append('AnthropicProvider')
+if OpenAIProvider:
+    __all__.append('OpenAIProvider')
+if OllamaProvider:
+    __all__.append('OllamaProvider')
+if LMStudioProvider:
+    __all__.append('LMStudioProvider')

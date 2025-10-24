@@ -126,6 +126,16 @@ class LLMProviderFactory:
             )
         except ImportError:
             pass  # Ollama provider not available
+        
+        # LM Studio provider
+        try:
+            from .lmstudio_provider import LMStudioProviderFactory
+            self.register_factory(
+                ProviderType.LMSTUDIO,
+                LMStudioProviderFactory()
+            )
+        except ImportError:
+            pass  # LM Studio provider not available
 
 
 class AnthropicProviderFactory(ProviderFactory):
