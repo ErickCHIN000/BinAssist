@@ -586,6 +586,39 @@ class OllamaProvider(BaseLLMProvider):
         
         return messages
     
+    def _extract_tool_calls_from_content(self, content: str) -> List[Dict[str, Any]]:
+        """
+        Extract tool calls from content when model doesn't provide native tool calls.
+        
+        Some Ollama models may return tool calls embedded in the content as JSON.
+        This method attempts to parse such content.
+        
+        Args:
+            content: The content string to parse for tool calls
+            
+        Returns:
+            List of tool call dictionaries in OpenAI format
+        """
+        tool_calls = []
+        
+        try:
+            # Try to parse content as JSON
+            parsed = json.loads(content)
+            
+            # Check if it's a single tool call
+            if isinstance(parsed, dict):
+                if 'function' in parsed or 'name' in parsed:
+                    tool_calls.append(parsed)
+            # Check if it's a list of tool calls
+            elif isinstance(parsed, list):
+                for item in parsed:
+                    if isinstance(item, dict) and ('function' in item or 'name' in item):
+                        tool_calls.append(item)
+        except json.JSONDecodeError:
+            # Content is not JSON, no tool calls to extract
+            pass
+        
+        return tool_calls
 
 
 # Factory for Ollama provider
